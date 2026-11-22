@@ -92,7 +92,7 @@ export default function ProductPage({
 
   return (
     <>
-      {/* Bottom padding leaves room for the Add to Bag bar so it never covers content. */}
+      {/* Bottom padding leaves room for the Add to Bag bar. */}
       <div className="mx-auto max-w-[480px] pb-[calc(64px+env(safe-area-inset-bottom))]">
         {/* 1. Header: 56px */}
         <header className="flex h-14 items-center justify-between border-b border-hairline px-4">
@@ -219,8 +219,7 @@ export default function ProductPage({
                     setNudge(false);
                   }}
                   className={[
-                    // Every button is the same box: one fifth of the row wide, 48px tall,
-                    // never smaller than 44 x 44px, whatever its state.
+                    // Same box in every state, never under 44 x 44px.
                     "relative h-12 min-h-11 min-w-11 touch-manipulation rounded-md font-medium",
                     sold
                       ? "bg-soft text-[#9e9ea0] line-through"
@@ -269,7 +268,7 @@ export default function ProductPage({
                 {t.title}
                 <span aria-hidden="true" className="text-[22px] font-normal">
                   <span className="group-open:hidden">+</span>
-                  <span className="hidden group-open:inline">–</span>
+                  <span className="hidden group-open:inline">−</span>
                 </span>
               </summary>
               <p className="pb-4 text-sm leading-[22px] text-[#39393b]">

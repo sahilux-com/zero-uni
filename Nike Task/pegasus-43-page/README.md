@@ -2,29 +2,29 @@ Live page: https://pegasus-43-page-three.vercel.app/
 
 # Nike Pegasus 43 phone launch page
 
-A phone-first product page for the Nike Pegasus 43 (Black/White-Volt, $140), built with Next.js and Tailwind CSS and deployed on Vercel.
+A phone-first product page built with Next.js and Tailwind CSS, deployed on Vercel.
 
-![The live page on a phone, with size M 7 selected](docs/live-phone-screenshot.webp)
+<img src="docs/live-phone-screenshot.webp" alt="The live page on a phone with size M 7 selected" width="300">
 
-## What it does
+## How it works
 
-- Shows all 26 sizes in a grid of 5 per row. Stock comes from `data/sizes.json`, the 8 December 2026 snapshot: 10 in stock, 7 low stock, 9 sold out.
-- Sold-out sizes stay in place, greyed out and untappable. Low-stock sizes carry a small dot.
-- The size grid has a fixed height and every part above it has a set height, so the grid does not move while the page loads.
+- All 26 sizes sit in a fixed-height grid, 5 per row. Sold-out sizes stay in place, greyed out.
+- Stock is read from `data/sizes.json` at build time, so the grid is complete on first paint.
+- Every part above the grid has a set height, so the grid never moves while the page loads.
 
 ## Checks
 
-| Check | Result on the live page |
-| :- | :- |
-| Lighthouse performance (mobile, Slow 4G, 4x CPU slowdown) | 98, budget 90 |
-| Layout shift | 0 |
-| Smallest size button side | 48px, budget 44px |
+Measured on the live page as a phone on Slow 4G with a 4x slower CPU.
 
-- Lighthouse report for the live page: [docs/lighthouse-live.report.html](docs/lighthouse-live.report.html) (data in [docs/lighthouse-live.report.json](docs/lighthouse-live.report.json))
-- Budget: [speed-budget.json](speed-budget.json)
-- Notes on the Slow 4G trace and the launch: [NOTES.md](NOTES.md)
+| Check | Result | Budget |
+| :- | :- | :- |
+| Lighthouse performance | 98 | 90 or more |
+| Size grid movement | 0px | 0px |
+| Smallest size button side | 48px | 44px or more |
 
-## Run it
+[Lighthouse report](docs/lighthouse-live.report.html) · [Budget](speed-budget.json) · [Notes](NOTES.md) · [Prompts](PROMPTS.md)
+
+## Run locally
 
 ```bash
 npm install
@@ -32,11 +32,6 @@ npm run build
 npm run start -- -p 3211
 ```
 
-Then open http://localhost:3211/.
+`npm run check:lighthouse` runs Lighthouse CI. `npm run check:grid` checks grid movement and button sizes on port 3211; add `-- <url>` to check another address, such as the live page.
 
-```bash
-npm run check:lighthouse   # Lighthouse CI with the Slow 4G phone settings
-npm run check:grid         # size grid movement and button sizes, page must be running on 3211
-```
-
-Photos, tech copy and reviews on the page are placeholders.
+Photos, copy and reviews are placeholders.
