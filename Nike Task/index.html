@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nike Pegasus 43 · Black/White-Volt</title>
+<meta name="description" content="Nike Pegasus 43 road running shoe in Black/White-Volt. $140. Launches 10 December 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Backup font sized to match Inter, so text does not jump when Inter arrives. */
+  @font-face {
+    font-family: "Inter Fallback";
+    src: local("Arial");
+    size-adjust: 107.12%;
+    ascent-override: 90.44%;
+    descent-override: 22.52%;
+    line-gap-override: 0%;
+  }
+  :root {
+    --ink: #111;
+    --muted: #707072;
+    --line: #cacacb;
+    --soft: #f5f5f5;
+    --low: #d43f21;
+    --pad: 16px;
+    --bar: 64px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font: 400 16px/24px "Inter", "Inter Fallback", Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+  }
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+    /* room for the Add to Bag bar so it never covers content */
+    padding-bottom: calc(var(--bar) + env(safe-area-inset-bottom));
+  }
+  h1, h2, p { margin: 0; }
+  button { font: inherit; color: inherit; }
+
+  /* 1. Header: 56px */
+  .header {
+    height: 56px;
+    padding: 0 var(--pad);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .brand { font-weight: 700; font-size: 20px; letter-spacing: .04em; font-style: italic; }
+  .bag {
+    width: 48px; height: 48px; margin-right: -12px;
+    display: grid; place-items: center; position: relative;
+    background: none; border: 0;
+  }
+  .bag-count {
+    position: absolute; top: 8px; right: 6px;
+    min-width: 16px; height: 16px; border-radius: 8px;
+    background: var(--ink); color: #fff;
+    font-size: 10px; line-height: 16px; font-weight: 700; text-align: center;
+  }
+
+  /* 2. Gallery: fixed square, so a late photo cannot push anything down */
+  .gallery { position: relative; width: 100%; aspect-ratio: 1 / 1; background: var(--soft); }
+  .slides {
+    display: flex; width: 100%; height: 100%;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .slides::-webkit-scrollbar { display: none; }
+  .slides img {
+    flex: 0 0 100%; width: 100%; height: 100%;
+    object-fit: cover; scroll-snap-align: start;
+  }
+  .counter {
+    position: absolute; right: 12px; bottom: 12px;
+    padding: 2px 10px; border-radius: 12px;
+    background: rgba(17,17,17,.72); color: #fff;
+    font-size: 12px; line-height: 20px;
+  }
+
+  /* 3. Name and price: 88px */
+  .info { height: 88px; padding: 8px var(--pad); overflow: hidden; }
+  .info h1 { font-size: 22px; line-height: 28px; font-weight: 700; }
+  .info .sub { font-size: 14px; line-height: 20px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info .price { font-weight: 500; line-height: 24px; }
+
+  /* 4. Size block: 40 + 8 + 328 + 20 = 396px */
+  .sizes { padding: 0 var(--pad); }
+  .toggle {
+    height: 40px; display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--soft); border-radius: 20px; padding: 3px;
+  }
+  .toggle button {
+    border: 0; border-radius: 17px; background: none;
+    font-size: 14px; font-weight: 500; color: var(--muted);
+  }
+  .toggle button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+  .grid {
+    margin-top: 8px;
+    height: 328px; /* 6 rows of 48px + 5 gaps of 8px, set before stock loads */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 48px;
+    gap: 8px;
+  }
+  .size {
+    position: relative;
+    height: 48px; padding: 0;
+    border: 0; border-radius: 6px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line);
+    font-weight: 500;
+    touch-action: manipulation;
+  }
+  /* Selected: outline drawn inside the button, so its size never changes */
+  .size[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .size.low::after {
+    content: ""; position: absolute; top: 6px; right: 6px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--low);
+  }
+  .size.sold {
+    background: var(--soft); color: #9e9ea0;
+    text-decoration: line-through; box-shadow: none;
+  }
+  .size.loading { color: #9e9ea0; }
+  .note {
+    height: 20px; font-size: 13px; line-height: 20px;
+    color: var(--low); white-space: nowrap; overflow: hidden;
+  }
+
+  /* 5. Add to Bag bar: 64px, stuck to the bottom */
+  .buybar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    height: calc(var(--bar) + env(safe-area-inset-bottom));
+    padding: 8px var(--pad) calc(8px + env(safe-area-inset-bottom));
+    background: #fff; border-top: 1px solid #e5e5e5;
+  }
+  .buybar button {
+    display: block; width: 100%; max-width: 448px; margin: 0 auto;
+    height: 48px; border: 0; border-radius: 24px;
+    background: var(--ink); color: #fff; font-weight: 500;
+    white-space: nowrap; overflow: hidden;
+  }
+
+  /* 6. Tech highlights: 120px, full copy opens on tap */
+  .section { padding: 0 var(--pad); margin-top: 24px; }
+  .section h2 { font-size: 18px; line-height: 24px; font-weight: 700; }
+  .tech { height: 120px; overflow: hidden; }
+  .tech ul { margin: 8px 0 0; padding: 0; list-style: none; }
+  .tech li { height: 28px; line-height: 28px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tech li b { font-weight: 700; }
+  details { border-top: 1px solid #e5e5e5; }
+  details:last-of-type { border-bottom: 1px solid #e5e5e5; }
+  summary {
+    min-height: 56px; display: flex; align-items: center; justify-content: space-between;
+    font-weight: 500; cursor: pointer; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-size: 22px; font-weight: 400; }
+  details[open] summary::after { content: "–"; }
+  details p { padding-bottom: 16px; font-size: 14px; line-height: 22px; color: #39393b; }
+
+  /* 7. Reviews summary: 96px, full reviews below */
+  .rating { height: 96px; overflow: hidden; }
+  .rating .score { margin-top: 8px; font-size: 28px; line-height: 36px; font-weight: 700; }
+  .rating .score span { font-size: 14px; font-weight: 400; color: var(--muted); }
+  .rating .fit { font-size: 14px; line-height: 20px; color: var(--muted); }
+  .review { padding: 16px 0; border-top: 1px solid #e5e5e5; font-size: 14px; line-height: 22px; }
+  .review b { display: block; }
+  .review small { color: var(--muted); font-size: 12px; }
+  .placeholder { margin: 24px var(--pad) 16px; font-size: 12px; line-height: 18px; color: var(--muted); }
+
+  :focus-visible { outline: 2px solid #1151ff; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <span class="brand">NIKE</span>
+    <button class="bag" type="button" aria-label="Bag, 0 items" id="bag">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="bag-count" id="bagCount" hidden>0</span>
+    </button>
+  </header>
+
+  <section class="gallery" aria-label="Photos, swipe for more">
+    <div class="slides" id="slides">
+      <img src="images/pegasus-43-1.svg" width="360" height="360" alt="Nike Pegasus 43 in Black/White-Volt, side view" fetchpriority="high">
+      <img src="images/pegasus-43-2.svg" width="360" height="360" alt="Nike Pegasus 43, angled view" loading="lazy">
+      <img src="images/pegasus-43-3.svg" width="360" height="360" alt="Nike Pegasus 43, outsole view" loading="lazy">
+      <img src="images/pegasus-43-4.svg" width="360" height="360" alt="Nike Pegasus 43, heel view" loading="lazy">
+    </div>
+    <span class="counter" id="counter" aria-hidden="true">1 / 4</span>
+  </section>
+
+  <section class="info">
+    <h1>Nike Pegasus 43</h1>
+    <p class="sub">Black/White-Volt · Launches 10 Dec</p>
+    <p class="price">$140</p>
+  </section>
+
+  <section class="sizes" id="sizes" aria-label="Select size">
+    <div class="toggle" role="group" aria-label="Size range">
+      <button type="button" data-range="m" aria-pressed="true">Men's</button>
+      <button type="button" data-range="w" aria-pressed="false">Women's</button>
+    </div>
+    <div class="grid" id="grid" role="group" aria-label="US sizes">
+      <button class="size loading" type="button" data-m="3.5" data-w="5" aria-pressed="false" disabled>3.5</button>
+      <button class="size loading" type="button" data-m="4" data-w="5.5" aria-pressed="false" disabled>4</button>
+      <button class="size loading" type="button" data-m="4.5" data-w="6" aria-pressed="false" disabled>4.5</button>
+      <button class="size loading" type="button" data-m="5" data-w="6.5" aria-pressed="false" disabled>5</button>
+      <button class="size loading" type="button" data-m="5.5" data-w="7" aria-pressed="false" disabled>5.5</button>
+      <button class="size loading" type="button" data-m="6" data-w="7.5" aria-pressed="false" disabled>6</button>
+      <button class="size loading" type="button" data-m="6.5" data-w="8" aria-pressed="false" disabled>6.5</button>
+      <button class="size loading" type="button" data-m="7" data-w="8.5" aria-pressed="false" disabled>7</button>
+      <button class="size loading" type="button" data-m="7.5" data-w="9" aria-pressed="false" disabled>7.5</button>
+      <button class="size loading" type="button" data-m="8" data-w="9.5" aria-pressed="false" disabled>8</button>
+      <button class="size loading" type="button" data-m="8.5" data-w="10" aria-pressed="false" disabled>8.5</button>
+      <button class="size loading" type="button" data-m="9" data-w="10.5" aria-pressed="false" disabled>9</button>
+      <button class="size loading" type="button" data-m="9.5" data-w="11" aria-pressed="false" disabled>9.5</button>
+      <button class="size loading" type="button" data-m="10" data-w="11.5" aria-pressed="false" disabled>10</button>
+      <button class="size loading" type="button" data-m="10.5" data-w="12" aria-pressed="false" disabled>10.5</button>
+      <button class="size loading" type="button" data-m="11" data-w="12.5" aria-pressed="false" disabled>11</button>
+      <button class="size loading" type="button" data-m="11.5" data-w="13" aria-pressed="false" disabled>11.5</button>
+      <button class="size loading" type="button" data-m="12" data-w="13.5" aria-pressed="false" disabled>12</button>
+      <button class="size loading" type="button" data-m="12.5" data-w="14" aria-pressed="false" disabled>12.5</button>
+      <button class="size loading" type="button" data-m="13" data-w="14.5" aria-pressed="false" disabled>13</button>
+      <button class="size loading" type="button" data-m="13.5" data-w="15" aria-pressed="false" disabled>13.5</button>
+      <button class="size loading" type="button" data-m="14" data-w="15.5" aria-pressed="false" disabled>14</button>
+      <button class="size loading" type="button" data-m="14.5" data-w="16" aria-pressed="false" disabled>14.5</button>
+      <button class="size loading" type="button" data-m="15" data-w="16.5" aria-pressed="false" disabled>15</button>
+      <button class="size loading" type="button" data-m="15.5" data-w="17" aria-pressed="false" disabled>15.5</button>
+      <button class="size loading" type="button" data-m="16" data-w="17.5" aria-pressed="false" disabled>16</button>
+    </div>
+    <p class="note" id="note" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="section">
+    <div class="tech">
+      <h2>Tech highlights</h2>
+      <ul>
+        <li><b>Cushioning</b> · responsive foam with Air Zoom units</li>
+        <li><b>Upper</b> · breathable engineered mesh</li>
+        <li><b>Outsole</b> · waffle-pattern rubber for road grip</li>
+      </ul>
+    </div>
+    <details>
+      <summary>Cushioning</summary>
+      <p>A full-length foam midsole returns energy with every step, and Air Zoom units in the forefoot and heel add a springy feel for daily miles.</p>
+    </details>
+    <details>
+      <summary>Upper and fit</summary>
+      <p>Engineered mesh lets heat escape while a midfoot band holds your foot steady. Fits true to size for most runners.</p>
+    </details>
+    <details>
+      <summary>Outsole and durability</summary>
+      <p>The waffle-pattern rubber outsole grips wet and dry roads, with extra rubber in high-wear zones to last through training blocks.</p>
+    </details>
+  </section>
+
+  <section class="section">
+    <div class="rating">
+      <h2>Reviews</h2>
+      <p class="score">4.6 <span>out of 5 · 1,284 reviews</span></p>
+      <p class="fit">Most runners say it fits true to size.</p>
+    </div>
+    <div class="review"><b>Best daily trainer I've owned</b><small>★★★★★ · Size M 10.5</small><br>Soft enough for easy runs and still quick when I pick it up.</div>
+    <div class="review"><b>True to size</b><small>★★★★☆ · Size W 8</small><br>Went with my usual size and the fit was right out of the box.</div>
+  </section>
+
+  <p class="placeholder">Photos, tech copy and reviews are placeholders until final content is supplied.</p>
+</div>
+
+<div class="buybar">
+  <button type="button" id="buy">Select a size</button>
+</div>
+
+<script>
+(function () {
+  var STOCK_URL = 'Pegasus%2043%20size%20and%20stock%20list.json';
+  var grid = document.getElementById('grid');
+  var buttons = Array.prototype.slice.call(grid.querySelectorAll('.size'));
+  var note = document.getElementById('note');
+  var buy = document.getElementById('buy');
+  var bagCount = document.getElementById('bagCount');
+  var bag = document.getElementById('bag');
+  var range = 'm';
+  var selected = null;
+  var inBag = 0;
+
+  function label(btn) {
+    return (range === 'm' ? "Men's " + btn.dataset.m : "Women's " + btn.dataset.w);
+  }
+  function describe(btn) {
+    var s = 'US ' + label(btn);
+    if (btn.classList.contains('sold')) s += ', sold out';
+    else if (btn.classList.contains('low')) s += ', low stock';
+    btn.setAttribute('aria-label', s);
+  }
+  function refreshBar() {
+    if (!selected) { buy.textContent = 'Select a size'; note.textContent = ''; return; }
+    buy.textContent = 'Add to Bag · ' + (range === 'm' ? 'M ' + selected.dataset.m : 'W ' + selected.dataset.w);
+    note.textContent = selected.classList.contains('low') ? 'Only a few left' : '';
+  }
+
+  // Stock arrives after first paint. It only changes how buttons look, never their size or place.
+  fetch(STOCK_URL).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function (rows) {
+    var byMen = {};
+    rows.forEach(function (row) { byMen[String(row.size_us_men)] = row; });
+    buttons.forEach(function (btn) {
+      var row = byMen[btn.dataset.m];
+      btn.classList.remove('loading');
+      if (!row || row.stock_status === 'sold_out' || !row.in_stock) {
+        btn.classList.add('sold');   // stays in the grid, cannot be tapped
+      } else {
+        btn.disabled = false;
+        btn.dataset.sku = row.sku;
+        if (row.stock_status === 'low_stock') btn.classList.add('low');
+      }
+      describe(btn);
+    });
+  }).catch(function () {
+    note.textContent = "Sizes couldn't load. Please refresh.";
+  });
+
+  grid.addEventListener('click', function (e) {
+    var btn = e.target.closest('.size');
+    if (!btn || btn.disabled) return;
+    if (selected) selected.setAttribute('aria-pressed', 'false');
+    selected = btn;
+    btn.setAttribute('aria-pressed', 'true');
+    refreshBar();
+  });
+
+  document.querySelector('.toggle').addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t || t.dataset.range === range) return;
+    range = t.dataset.range;
+    this.querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b === t));
+    });
+    buttons.forEach(function (btn) {
+      btn.textContent = range === 'm' ? btn.dataset.m : btn.dataset.w;
+      if (!btn.classList.contains('loading')) describe(btn);
+    });
+    refreshBar();
+  });
+
+  buy.addEventListener('click', function () {
+    if (!selected) {
+      document.getElementById('sizes').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      note.textContent = 'Please select a size';
+      return;
+    }
+    inBag += 1;
+    bagCount.hidden = false;
+    bagCount.textContent = inBag;
+    bag.setAttribute('aria-label', 'Bag, ' + inBag + (inBag === 1 ? ' item' : ' items'));
+    buy.textContent = 'Added to Bag ✓';
+    setTimeout(refreshBar, 1500);
+  });
+
+  var slides = document.getElementById('slides');
+  var counter = document.getElementById('counter');
+  slides.addEventListener('scroll', function () {
+    var i = Math.round(slides.scrollLeft / slides.clientWidth) + 1;
+    counter.textContent = i + ' / ' + slides.children.length;
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

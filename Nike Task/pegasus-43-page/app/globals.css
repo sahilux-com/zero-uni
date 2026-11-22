@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), Arial, sans-serif;
+  --color-ink: #111111;
+  --color-muted: #707072;
+  --color-line: #cacacb;
+  --color-hairline: #e5e5e5;
+  --color-soft: #f5f5f5;
+  --color-low: #d43f21;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+}
+
+/* Hide the gallery scrollbar without changing its fixed box. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
