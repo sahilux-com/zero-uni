@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "check:lighthouse": "lhci autorun",
+    "check:grid": "node scripts/check-size-grid.mjs"
   },
   "dependencies": {
     "next": "16.4.6",
@@ -13,10 +15,13 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.16.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chrome-launcher": "^1.2.3",
+    "puppeteer-core": "^25.18.1",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
   }

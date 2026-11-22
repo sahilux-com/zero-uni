@@ -139,6 +139,7 @@ export default function ProductPage({
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={p.src}
+                data-testid={i === 0 ? "main-photo" : undefined}
                 src={p.src}
                 width={375}
                 height={375}
@@ -163,7 +164,9 @@ export default function ProductPage({
           <p className="truncate text-sm leading-5 text-muted">
             {colorway} · Launches 10 Dec
           </p>
-          <p className="font-medium leading-6">${price}</p>
+          <p data-testid="price" className="font-medium leading-6">
+            ${price}
+          </p>
         </section>
 
         {/* 4. Size block: 40 + 8 + 328 + 20 = 396px */}
@@ -194,6 +197,7 @@ export default function ProductPage({
           <div
             role="group"
             aria-label="US sizes"
+            data-testid="size-grid"
             className="mt-2 grid h-[328px] auto-rows-[48px] grid-cols-5 gap-2"
           >
             {sizes.map((s) => {
@@ -204,6 +208,7 @@ export default function ProductPage({
                 <button
                   key={s.sku}
                   type="button"
+                  data-testid={sold ? "size-button-sold-out" : "size-button"}
                   disabled={sold}
                   aria-pressed={isSelected}
                   aria-label={`US ${longLabel(s)}${
