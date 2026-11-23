@@ -11,11 +11,12 @@ export type Size = {
 
 type Range = "m" | "w";
 
+// Square WebP product shots, 750 px for 2x phones and 1125 px for 3x phones.
 const PHOTOS = [
-  { src: "/images/pegasus-43-1.svg", alt: "side view" },
-  { src: "/images/pegasus-43-2.svg", alt: "angled view" },
-  { src: "/images/pegasus-43-3.svg", alt: "outsole view" },
-  { src: "/images/pegasus-43-4.svg", alt: "heel view" },
+  { id: "pegasus-43-1", alt: "outer side view" },
+  { id: "pegasus-43-2", alt: "inner side view" },
+  { id: "pegasus-43-3", alt: "front angled view" },
+  { id: "pegasus-43-4", alt: "back angled view" },
 ];
 
 const TECH = [
@@ -125,7 +126,7 @@ export default function ProductPage({
         {/* 2. Photo gallery: a fixed square, so a late photo cannot push anything down */}
         <section
           aria-label="Photos, swipe for more"
-          className="relative aspect-square w-full bg-soft"
+          className="relative aspect-square w-full bg-[#e0dbd8]"
         >
           <div
             ref={slidesRef}
@@ -138,9 +139,11 @@ export default function ProductPage({
             {PHOTOS.map((p, i) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                key={p.src}
+                key={p.id}
                 data-testid={i === 0 ? "main-photo" : undefined}
-                src={p.src}
+                src={`/images/${p.id}-1125.webp`}
+                srcSet={`/images/${p.id}-750.webp 750w, /images/${p.id}-1125.webp 1125w`}
+                sizes="(max-width: 480px) 100vw, 480px"
                 width={375}
                 height={375}
                 alt={`${name} in ${colorway}, ${p.alt}`}
